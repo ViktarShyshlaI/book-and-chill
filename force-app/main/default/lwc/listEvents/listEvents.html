@@ -1,0 +1,26 @@
+<template>
+    <lightning-card>
+
+        <lightning-datatable
+            key-field="Id"
+            data={records}
+            columns={columns}
+            hide-checkbox-column>
+        </lightning-datatable>
+
+
+        <div class="slds-m-around_medium">
+            <lightning-button 
+            variant="brand" 
+            label="New Event" 
+            title="Create new event" 
+            onclick={handleModalChange} 
+            >
+        </lightning-button>
+        </div>
+
+        <template if:true={isModalOpen}>
+            <c-new-event onclosemodal={handleEventFire}></c-new-event>
+        </template>
+    </lightning-card>
+</template>

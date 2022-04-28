@@ -1,0 +1,11 @@
+<template>
+    <lightning-card>
+        <p>All Premises</p>
+        <lightning-datatable
+            key-field="Id"
+            data={premises.data}
+            columns={columns}
+            hide-checkbox-column>
+        </lightning-datatable>
+    </lightning-card>
+</template>
