@@ -13,12 +13,25 @@
           <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">New Event</h1>
         </div>
         <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
-          <lightning-record-form
+          
+          <lightning-record-edit-form object-api-name="Contact">
+            <lightning-messages> </lightning-messages>
+            <lightning-input-field field-name="Name"> </lightning-input-field>
+            <lightning-button
+                class="slds-m-top_small"
+                type="submit"
+                label="Create new"
+            >
+            </lightning-button>
+          </lightning-record-edit-form>
+
+          
+          <!-- <lightning-record-form
                     object-api-name={eventObject}
                     fields={fields}
                     oncancel={handleChnage}
                     onsuccess={handleSuccess}>
-          </lightning-record-form>
+          </lightning-record-form> -->
         </div>
       </div>
     </section>

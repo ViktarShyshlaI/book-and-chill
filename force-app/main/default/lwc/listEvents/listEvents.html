@@ -1,26 +1,105 @@
 <template>
     <lightning-card>
+        <p class="slds-p-left_small">
+            List of events!
+        </p>
+
+
+
+        <!-- <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_striped" aria-label="Example table of Opportunities with striped rows">
+            <thead>
+              <tr class="slds-line-height_reset">
+                <th class="" scope="col">
+                  <div class="slds-truncate" title="Name">Name</div>
+                </th>
+                <th class="" scope="col">
+                  <div class="slds-truncate" title="Premise">Premise</div>
+                </th>
+                <th class="" scope="col">
+                  <div class="slds-truncate" title="Start">Start</div>
+                </th>
+                <th class="" scope="col">
+                  <div class="slds-truncate" title="End">End</div>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+
+                <template iterator:it={events}>
+                    <tr class="slds-hint-parent" key = {it.value.Id}>
+                        <td data-label="Name">
+                            <div class="slds-cell-wrap">
+                                <a href="#" tabindex="-1">{it.value.Name}</a>
+                            </div>
+                        </td>
+                        <td data-label="Premise">
+                            {it.value.Premises__r.Name}
+                        </td>
+                        <td data-label="Start">
+                            <div class="slds-cell-wrap">{it.value.StartDateTime__c}</div>
+                        </td>
+                        <td data-label="End">
+                            <div class="slds-cell-wrap">{it.value.EndDateTime__c}</div>
+                        </td>
+                    </tr>
+                </template>
+            </tbody>
+          </table> -->
+
+
 
         <lightning-datatable
             key-field="Id"
             data={records}
             columns={columns}
-            hide-checkbox-column>
+            hide-checkbox-column
+            >
         </lightning-datatable>
 
-
-        <div class="slds-m-around_medium">
-            <lightning-button 
-            variant="brand" 
-            label="New Event" 
-            title="Create new event" 
-            onclick={handleModalChange} 
-            >
-        </lightning-button>
-        </div>
+        <template if:false={isModalOpen}>
+            <div class="slds-m-around_medium">
+                <lightning-button 
+                    variant="brand" 
+                    label="New Event" 
+                    title="Create new event" 
+                    onclick={handleModalChange} 
+                ></lightning-button>
+            </div>
+        </template>
 
         <template if:true={isModalOpen}>
-            <c-new-event onclosemodal={handleEventFire}></c-new-event>
+            <div class="slds-box slds-m-around_large slds-size_3-of-7">
+                <lightning-record-edit-form object-api-name="Event__c"
+                                            onsuccess={handleSuccess}>
+                    <lightning-messages> </lightning-messages>
+                    <lightning-input-field field-name="Name"> </lightning-input-field>
+                    <lightning-input-field field-name="Type__c"> </lightning-input-field>
+                    <lightning-input-field field-name="Premises__c"> </lightning-input-field>
+                    <lightning-input-field field-name="StartDateTime__c"> </lightning-input-field>
+                    <lightning-input-field field-name="EndDateTime__c"> </lightning-input-field>
+                    <div class="slds-align_absolute-center">
+                        <lightning-button
+                            class="slds-m-top_small"
+                            label="Cancel"
+                            type="reset"
+                            variant="brand-outline"
+                            onclick={handleModalChange}
+                        ></lightning-button>
+                        <lightning-button
+                            class="slds-m-top_small slds-m-left_small"
+                            type="submit"
+                            variant="brand"
+                            label="Save"
+                        ></lightning-button>
+                    </div>
+
+                    
+                </lightning-record-edit-form>
+            </div>
         </template>
+
+        <!-- <template if:true={isModalOpen}>
+            <c-new-event onclosemodal={handleEventFire}></c-new-event>
+        </template> -->
     </lightning-card>
 </template>
