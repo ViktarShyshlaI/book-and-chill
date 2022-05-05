@@ -14,11 +14,13 @@ var colorField;
 var additionalFilter;
 var allDayField;
 var titleField;
+var recordId;
 
 export default class FullCalendarComponent extends NavigationMixin(LightningElement) {
   calendar;
   fullCalendarInitialized = false;
   
+  @api recordId;
   @api titleField;
   @api objectName;
   @api startField;
@@ -36,6 +38,13 @@ export default class FullCalendarComponent extends NavigationMixin(LightningElem
   @track calendarLabel;
 
   
+  checkRecordId() {
+    console.log("checkRecordId");
+    console.log("recordId: " , this.recordId);
+    setTimeout(this.renderedCallback(), 500);
+  }
+
+
   connectedCallback() {
     this.addEventListener('fceventclick', this.handleEventClick.bind(this));
     //this.addEventListener('mousewheel', this.handleScroll.bind(this));  
@@ -55,38 +64,40 @@ export default class FullCalendarComponent extends NavigationMixin(LightningElem
     additionalFilter = this.additionalFilter;
     allDayField = this.allDayField;
     titleField = this.titleField;
+    recordId = this.recordId;
 
     Promise.all([
       loadScript(this, fullCalendar + "/packages/core/main.js"),
       loadStyle(this, fullCalendar + "/packages/core/main.css")
     ])
-      .then(() => {
-        //got to load core first, then plugins
-        Promise.all([
-          loadScript(this, fullCalendar + "/packages/daygrid/main.js"),
-          loadStyle(this, fullCalendar + "/packages/daygrid/main.css"),
-          loadScript(this, fullCalendar + "/packages/list/main.js"),
-          loadStyle(this, fullCalendar + "/packages/list/main.css"),
-          loadScript(this, fullCalendar + "/packages/timegrid/main.js"),
-          loadStyle(this, fullCalendar + "/packages/timegrid/main.css"),
-          loadScript(this, fullCalendar + "/packages/interaction/main.js"),
-          loadScript(this, fullCalendar + "/packages/moment/main.js"),
-          loadScript(this, fullCalendar + "/packages/moment-timezone/main.js"),
-        ]).then(() => {
-          console.log("init");
-          this.init();
-        });
-      })
-      .catch(error => {
-        console.log("error", error);
-        this.dispatchEvent(
-          new ShowToastEvent({
-            title: "Error loading FullCalendar",
-            //message: error.message,
-            variant: "error"
-          })
-        );
+    .then(() => {
+      //got to load core first, then plugins
+      Promise.all([
+        loadScript(this, fullCalendar + "/packages/daygrid/main.js"),
+        loadStyle(this, fullCalendar + "/packages/daygrid/main.css"),
+        loadScript(this, fullCalendar + "/packages/list/main.js"),
+        loadStyle(this, fullCalendar + "/packages/list/main.css"),
+        loadScript(this, fullCalendar + "/packages/timegrid/main.js"),
+        loadStyle(this, fullCalendar + "/packages/timegrid/main.css"),
+        loadScript(this, fullCalendar + "/packages/interaction/main.js"),
+        loadScript(this, fullCalendar + "/packages/moment/main.js"),
+        loadScript(this, fullCalendar + "/packages/moment-timezone/main.js"),
+      ]).then(() => {
+        console.log("init");
+        console.log(this.recordId);
+        this.init();
       });
+    })
+    .catch(error => {
+      console.log("error", error);
+      this.dispatchEvent(
+        new ShowToastEvent({
+          title: "Error loading FullCalendar",
+          //message: error.message,
+          variant: "error"
+        })
+      );
+    });
   }
 
   init() {
@@ -198,7 +209,7 @@ export default class FullCalendarComponent extends NavigationMixin(LightningElem
 
   }
 
-  eventSourceHandler(info, successCallback, failureCallback) {
+  eventSourceHandler(info, successCallback, failureCallback) {   
     getEventsNearbyDynamic({
       startDate: info.start,
       endDate: info.end,
@@ -208,32 +219,33 @@ export default class FullCalendarComponent extends NavigationMixin(LightningElem
       endField: endField,
       colorField: colorField,
       allDayField: allDayField,
-      additionalFilter: additionalFilter
+      additionalFilter: additionalFilter,
+      recordId: recordId
     })
-      .then(result => {
-        if (result) {
-          let events = result;
-          let e = [];
-          for (let event in events) {
-            if (event) {
-              e.push({
-                title: events[event][titleField],
-                start: events[event][startField],
-                end: events[event][endField],
-                Id: events[event].Id,
-                id: events[event].Id,
-                color: events[event][colorField],
-                allDay: events[event][allDayField]
-              });
-            }
+    .then(result => {
+      if (result) {
+        let events = result;
+        let e = [];
+        for (let event in events) {
+          if (event) {
+            e.push({
+              title: events[event][titleField],
+              start: events[event][startField],
+              end: events[event][endField],
+              Id: events[event].Id,
+              id: events[event].Id,
+              color: events[event][colorField],
+              allDay: events[event][allDayField]
+            });
           }
-          console.log("num events = ",e.length);
-          successCallback(e);
         }
-      })
-      .catch(error => {
-        console.error("error calling apex controller:",error);
-        failureCallback(error);
-      });
+        console.log("num events = ",e.length);
+        successCallback(e);
+      }
+    })
+    .catch(error => {
+      console.error("error calling apex controller:",error);
+      failureCallback(error);
+    });
   }
 }

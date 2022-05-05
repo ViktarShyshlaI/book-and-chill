@@ -1,9 +1,9 @@
 <template>
-    <lightning-card>
-        <p class="slds-p-left_small">
-            List of events!
-        </p>
-
+    <lightning-card title="List of events" >
+        <button class="slds-button slds-button_icon" onclick={refresh} slot="actions">
+            <lightning-icon icon-name="utility:refresh" alternative-text="Next" size="small">
+            </lightning-icon>
+        </button>
 
 
         <!-- <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_striped" aria-label="Example table of Opportunities with striped rows">

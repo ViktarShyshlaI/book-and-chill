@@ -1,7 +1,8 @@
-import { LightningElement, api, wire } from 'lwc';
+import { LightningElement, api, wire, track } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import getListEvents from '@salesforce/apex/EventController.getListEvents';
 import getInsertedRecord from '@salesforce/apex/EventController.getInsertedRecord';
+import { refreshApex } from '@salesforce/apex';
 
 const columns = [
     {   
@@ -47,10 +48,13 @@ const columns = [
 
 export default class ListEvents extends LightningElement {
     isModalOpen = false;
+    @track
     records;
     columns = columns;
     insertedRecord;
     error;
+
+    
     // wiredRecords;
     // @wire( getListEvents ) events;
     // events;
@@ -84,9 +88,9 @@ export default class ListEvents extends LightningElement {
     //     }
     // }  
 
+
     @wire( getListEvents )  
     wiredEvents( value ) {
-        this.wiredRecords = value;
         const { data, error } = value;
         if ( data ) {
             let tempEvntList = []; 
@@ -102,29 +106,37 @@ export default class ListEvents extends LightningElement {
             this.records = undefined;
         }
     }
+
+    refresh() {
+        getListEvents()
+        .then(result => {
+            this.records = result;
+        })
+
+    }
     
-    handleSuccess(event) {
+    async handleSuccess(event) {
 
-        const payload = event.detail;
-        let createdEvent = JSON.parse(JSON.stringify(payload));  
-        let tempEvnRec = Object.assign({}, createdEvent);  
-        console.log("createdEvent.fields: ", createdEvent.fields);
-        console.log("createdEvent.fields.Name: ", createdEvent.fields.Name);
-        let oneRecord = new Object();
-        oneRecord.Name = createdEvent.fields.Name;
+        // const payload = event.detail;
+        // let createdEvent = JSON.parse(JSON.stringify(payload));  
+        // let nameRec = createdEvent.fields.Name.value;
+        // console.log(typeof nameRec);
 
-        getInsertedRecord({ nameNewEvent : createdEvent.fields.Name })
-            .then((result) => {
-                console.log('result ', result);
-                this.insertedRecord = result;
-                this.error = undefined;
-            })
-            .catch((error) => {
-                this.error = error;
-                this.insertedRecord = undefined;
-            });
-            console.log(this.insertedRecord);
+        // await getInsertedRecord({ nameNewEvent : nameRec })
+        //     .then((result) => {
+        //         console.log('result: ', result);
+        //         this.insertedRecord = result;
+        //         this.error = undefined;
+        //     })
+        //     .catch((error) => {
+        //         console.log('error: ', error);
+        //         this.error = error;
+        //         this.insertedRecord = undefined;
+        //     });
 
+        //     this.records.push(this.insertedRecord);
+        //     console.log("records: " , this.records);
+                        
         this.dispatchEvent(new ShowToastEvent({
                 title: "SUCCESS!",
                 message: "New record has been created.",
