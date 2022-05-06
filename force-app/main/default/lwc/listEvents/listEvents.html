@@ -1,5 +1,5 @@
 <template>
-    <lightning-card title="List of events" >
+    <lightning-card title="List of events">
         <button class="slds-button slds-button_icon" onclick={refresh} slot="actions">
             <lightning-icon icon-name="utility:refresh" alternative-text="Next" size="small">
             </lightning-icon>
@@ -75,8 +75,8 @@
                     <lightning-input-field field-name="Name"> </lightning-input-field>
                     <lightning-input-field field-name="Type__c"> </lightning-input-field>
                     <lightning-input-field field-name="Premises__c"> </lightning-input-field>
-                    <lightning-input-field field-name="StartDateTime__c"> </lightning-input-field>
-                    <lightning-input-field field-name="EndDateTime__c"> </lightning-input-field>
+                    <lightning-input-field field-name="StartDateTime__c" value={startDate} onchange={handleStartDateFill}> </lightning-input-field>
+                    <lightning-input-field field-name="EndDateTime__c" value={endDate} onchange={handleEndDateFill} > </lightning-input-field>
                     <div class="slds-align_absolute-center">
                         <lightning-button
                             class="slds-m-top_small"

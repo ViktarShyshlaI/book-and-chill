@@ -6,7 +6,7 @@ const columns = [
     { label: 'City', fieldName: 'City__c' },
 ];
 
-export default class List_Premises extends LightningElement {
+export default class ListPremises extends LightningElement {
     error;
     columns = columns;
     premisData = [];

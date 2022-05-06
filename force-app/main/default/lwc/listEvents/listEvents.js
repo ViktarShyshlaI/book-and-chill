@@ -48,13 +48,26 @@ const columns = [
 
 export default class ListEvents extends LightningElement {
     isModalOpen = false;
-    @track
     records;
     columns = columns;
     insertedRecord;
     error;
 
+    startDate = null;
+    endDate = null;
+
+    handleStartDateFill(event) {
+        if (this.endDate == null || this.endDate < event.target.value) {
+            this.endDate = event.target.value;
+        }
+    }
     
+    handleEndDateFill(event) {
+        this.endDate = event.target.value;
+        if (this.startDate == null || this.startDate > event.target.value) {
+            this.startDate = this.endDate;
+        }
+    }
     // wiredRecords;
     // @wire( getListEvents ) events;
     // events;
@@ -147,6 +160,8 @@ export default class ListEvents extends LightningElement {
 
     handleModalChange() {
         this.isModalOpen = !this.isModalOpen;
+        this.endDate = null;
+        this.startDate = null;
     }
 
     handleEventFire() {
