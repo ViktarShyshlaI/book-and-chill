@@ -1,7 +1,7 @@
 <template>
     <lightning-card title="List of events">
         <button class="slds-button slds-button_icon" onclick={refresh} slot="actions">
-            <lightning-icon icon-name="utility:refresh" alternative-text="Next" size="small">
+            <lightning-icon icon-name="utility:refresh" alternative-text="Next" size="small" onclick={getEvents}>
             </lightning-icon>
         </button>
 
@@ -48,13 +48,15 @@
 
 
 
-        <lightning-datatable
-            key-field="Id"
-            data={records}
-            columns={columns}
-            hide-checkbox-column
-            >
-        </lightning-datatable>
+          <template if:true={isData}>
+              <lightning-datatable
+                  key-field="Id"
+                  data={records}
+                  columns={columns}
+                  hide-checkbox-column
+                  >
+              </lightning-datatable>
+          </template>
 
         <template if:false={isModalOpen}>
             <div class="slds-m-around_medium">
@@ -67,39 +69,79 @@
             </div>
         </template>
 
+        
+        
         <template if:true={isModalOpen}>
-            <div class="slds-box slds-m-around_large slds-size_3-of-7">
-                <lightning-record-edit-form object-api-name="Event__c"
-                                            onsuccess={handleSuccess}>
-                    <lightning-messages> </lightning-messages>
-                    <lightning-input-field field-name="Name"> </lightning-input-field>
-                    <lightning-input-field field-name="Type__c"> </lightning-input-field>
-                    <lightning-input-field field-name="Premises__c"> </lightning-input-field>
-                    <lightning-input-field field-name="StartDateTime__c" value={startDate} onchange={handleStartDateFill}> </lightning-input-field>
-                    <lightning-input-field field-name="EndDateTime__c" value={endDate} onchange={handleEndDateFill} > </lightning-input-field>
-                    <div class="slds-align_absolute-center">
-                        <lightning-button
-                            class="slds-m-top_small"
-                            label="Cancel"
-                            type="reset"
-                            variant="brand-outline"
-                            onclick={handleModalChange}
-                        ></lightning-button>
-                        <lightning-button
-                            class="slds-m-top_small slds-m-left_small"
-                            type="submit"
-                            variant="brand"
-                            label="Save"
-                        ></lightning-button>
+            <!-- <c-new-event onclosemodal={handleEventFire}></c-new-event> -->
+        
+            <lightning-card>
+                <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" class="slds-modal slds-fade-in-open">
+                  <div class="slds-modal__container">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse">
+                        <lightning-icon icon-name="utility:close"
+                            alternative-text="close"
+                            variant="inverse"
+                            size="small" 
+                            onclick={handleModalChange}>
+                        </lightning-icon>
+                        <span class="slds-assistive-text">Cancel and close</span>
+                      </button>
+                    <div class="slds-modal__header">
+                      <h1 id="modal-heading-01" class="slds-modal__title slds-hyphenate">New Event</h1>
                     </div>
-
-                    
-                </lightning-record-edit-form>
-            </div>
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                      
+            
+                      <lightning-record-form
+                        object-api-name={objectApiName}
+                        fields={fields}
+                        onsuccess={handleSuccess}
+                        oncancel={handleModalChange}
+                      >
+                      </lightning-record-form>
+    
+                    </div>
+                  </div>
+                </section>
+                <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+              </lightning-card> 
+        
+        
         </template>
-
-        <!-- <template if:true={isModalOpen}>
-            <c-new-event onclosemodal={handleEventFire}></c-new-event>
-        </template> -->
     </lightning-card>
 </template>
+ 
+
+
+<!-- <template if:true={isModalOpen}> -->
+        <!-- <lightning-messages data-id='formerror'> </lightning-messages>
+        <div class="slds-box slds-m-around_large slds-size_3-of-7">
+            <lightning-record-edit-form object-api-name="Event__c"
+                                        onerror={handleError} 
+                                        onsuccess={handleSuccess}>
+                <lightning-messages> </lightning-messages>
+                <lightning-input-field field-name="Name"> </lightning-input-field>
+                <lightning-input-field field-name="Type__c"> </lightning-input-field>
+                <lightning-input-field field-name="Premises__c"> </lightning-input-field>
+                <lightning-input-field field-name="StartDateTime__c" value={startDate} onchange={handleStartDateFill}> </lightning-input-field>
+                <lightning-input-field field-name="EndDateTime__c" value={endDate} onchange={handleEndDateFill} > </lightning-input-field>
+                <div class="slds-align_absolute-center">
+                    <lightning-button
+                        class="slds-m-top_small"
+                        label="Cancel"
+                        type="reset"
+                        variant="brand-outline"
+                        onclick={handleModalChange}
+                    ></lightning-button>
+                    <lightning-button
+                        class="slds-m-top_small slds-m-left_small"
+                        type="submit"
+                        variant="brand"
+                        label="Save"
+                    ></lightning-button>
+                </div>
+
+                
+            </lightning-record-edit-form>
+        </div> -->
+    <!-- </template> -->
