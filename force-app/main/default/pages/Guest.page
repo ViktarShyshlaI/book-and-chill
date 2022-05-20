@@ -1,0 +1,9 @@
+<apex:page>
+    <apex:includeLightning/>
+    <div id="lightningvf" />
+    <script>
+        $Lightning.use("c:GuestApp", function () {
+            $Lightning.createComponent("c:listEventsGuestUsers", {}, "lightningvf", function (cmp) { });
+        });
+    </script>
+</apex:page>

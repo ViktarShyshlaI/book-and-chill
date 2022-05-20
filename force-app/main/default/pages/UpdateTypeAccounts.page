@@ -1,0 +1,25 @@
+<apex:page controller="UpdateTypeAccountsController">
+    <apex:slds />
+    <apex:stylesheet value="{!URLFOR($Resource.StyleZip, 'UpdateTypeAccounts.css')}"/>    
+    <apex:pageMessages id="pbm"/>        
+    <apex:form >
+        <apex:pageBlock title="Choose account(s) for update 'Type' field to value 'Deprecated'">
+            <apex:pageBlockButtons >
+                <apex:commandButton styleclass="slds-button slds-button_neutral" action="{!updateAccounts}" value="Update"/>
+            </apex:pageBlockButtons>
+            <apex:pageBlockTable value="{!listAccountWrapper}" var="acc" id="theTable">
+                <apex:column >
+                    <apex:facet name="header">
+                        <apex:inputCheckbox id="mainBox" value="{!mainBoxValue}"> 
+                            <apex:actionSupport event="onclick" action="{!toggleIsSelects}" reRender="theTable"/>
+                        </apex:inputCheckbox>
+                    </apex:facet>
+                    <apex:inputCheckbox value="{!acc.isSelect}"/>
+                </apex:column>
+                <apex:column value="{!acc.account.Name}"/>
+                <apex:column value="{!acc.account.Type}"/>
+                <apex:column value="{!acc.account.Test_Record__c}"/>
+            </apex:pageBlockTable>
+        </apex:pageBlock>
+    </apex:form>
+</apex:page>

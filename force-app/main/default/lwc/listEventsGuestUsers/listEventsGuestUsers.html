@@ -1,0 +1,18 @@
+<template>
+    <lightning-card title="List of events">
+        <button class="slds-button slds-button_icon" onclick={refresh} slot="actions">
+            <lightning-icon icon-name="utility:refresh" alternative-text="Next" size="small" onclick={getEvents}>
+            </lightning-icon>
+        </button>
+
+          <template if:true={isData}>
+              <lightning-datatable
+                  key-field="Id"
+                  data={records}
+                  columns={columns}
+                  hide-checkbox-column
+                  >
+              </lightning-datatable>
+          </template>
+    </lightning-card>
+</template>

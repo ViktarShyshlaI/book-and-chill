@@ -68,13 +68,11 @@ export default class ListEvents extends LightningElement {
     fields = [NAME_FIELD, TYPE_FIELD, PREMISELOOKUP_FIELD, STARTTIME_FIELD, ENDTIME_FIELD];
 
     connectedCallback() {
-        console.log("connectedCallback method");
         this.getEvents();
     }
     
             
     getEvents() {
-        console.log("console method");
         getListEvents()
         .then(result => {
             console.log("result", result);
@@ -145,118 +143,4 @@ export default class ListEvents extends LightningElement {
         // this.endDate = null;
         // this.startDate = null;
     }
-    
-
-    
-    // @wire( getListEvents )  
-    // wiredEvents( value ) {
-        //     const { data, error } = value;
-        //     if ( data ) {
-            //         let tempEvntList = []; 
-            //         data.forEach((record) => {
-                //             let tempEvnRec = Object.assign({}, record);  
-                //             tempEvnRec.EventName = '/' + tempEvnRec.Id;
-    //             tempEvnRec.PremisesName =  tempEvnRec.Premises__r.Name;
-    //             tempEvntList.push(tempEvnRec);
-    //         });
-    //         this.records = tempEvntList;
-    //         if (this.records.length !== 0) {
-        //             this.isData = true;
-        //         }
-        
-        //     } else if ( error ) {
-            //         this.error = error;
-            //         this.records = undefined;
-            //     }
-            // }
-
-    // refresh() {
-    //     getListEvents()
-    //     .then(result => {
-    //         this.records = result;
-    //     })
-    // }
-
-
-    // handleEventFire() {
-        //     console.log("handleEventFire");
-    //     this.handleModalChange();
-    // }
-    
-    
-    // handleError(event){ this.template.querySelector('lightning-messages').setError('your custom error message'); }
-    
-   
-    
-    // handleError(event) {
-        //     let detail = event.detail.detail;
-    //     event.detail.message = "eeee";
-
-    //     console.log("detail: ", detail);
-    //     console.log("message: ", message);
-    //     //do some stuff with message to make it more readable
-    //     // message = "Something went wrong!";
-    //     this.showToast("ERROR", message, "error");
-    // }
-    
-    
-    // async handleSuccess(event) {
-        
-        //     const payload = event.detail;
-        //     let createdEvent = JSON.parse(JSON.stringify(payload));  
-    //     let nameRec = createdEvent.fields.Name.value;
-    //     console.log(typeof nameRec);
-        
-    //     await getInsertedRecord({ nameNewEvent : nameRec })
-    //         .then((result) => {
-    //             console.log('result: ', result);
-    //             this.insertedRecord = result;
-    //             this.error = undefined;
-    //         })
-    //         .catch((error) => {
-    //                 console.log('error: ', error);
-    //                 this.error = error;
-    //             this.insertedRecord = undefined;
-    //         });
-
-    //         this.records.push(this.insertedRecord);
-    //         console.log("records: " , this.records);
-           
-    //     this.showToast("SUCCESS!", "New record has been created.", "success")
-    //     this.handleModalChange();
-    // }
-    
-    
 }
-    // wiredRecords;
-    // @wire( getListEvents ) events;
-    // events;
-
-    // @wire( getListEvents )  
-    // wiredAccount( { error, data } ) {
-    //     if ( data ) {
-    //         let rows = JSON.parse( JSON.stringify( data ) );
-    //         console.log( 'Rows are ' + JSON.stringify( rows ) );
-    //         const options = {
-    //             year: 'numeric', month: 'numeric', day: 'numeric',
-    //             hour: 'numeric', minute: 'numeric', second: 'numeric',
-    //             hour12: false
-    //         };
-    //         for ( let i = 0; i < rows.length; i++ ) {  
-    //             let dataParse = rows[ i ];
-    //             if ( dataParse.StartDateTime__c ) {
-    //                 let dt = new Date( dataParse.StartDateTime__c );
-    //                 dataParse.StartDateTime__c = new Intl.DateTimeFormat( 'en-US', options ).format( dt );
-    //             }
-    //             if ( dataParse.EndDateTime__c ) {
-    //                 let dt = new Date( dataParse.EndDateTime__c );
-    //                 dataParse.EndDateTime__c = new Intl.DateTimeFormat( 'en-US', options ).format( dt );
-    //             }
-    //         }
-    //         this.events = rows;
-    //         this.error = undefined;
-    //     } else if ( error ) {
-    //         this.error = error;
-    //         this.events = undefined;
-    //     }
-    // }  

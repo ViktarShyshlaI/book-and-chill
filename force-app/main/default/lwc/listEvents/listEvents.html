@@ -58,16 +58,18 @@
               </lightning-datatable>
           </template>
 
-        <template if:false={isModalOpen}>
-            <div class="slds-m-around_medium">
-                <lightning-button 
-                    variant="brand" 
-                    label="New Event" 
+          
+          <div class="slds-m-around_medium">
+            <lightning-button 
+                    
+                    label="Create new" 
                     title="Create new event" 
+                    icon-name="standard:service_appointment" 
+                    icon-position="right"
                     onclick={handleModalChange} 
-                ></lightning-button>
-            </div>
-        </template>
+            ></lightning-button>
+          </div>
+
 
         
         
@@ -143,5 +145,5 @@
 
                 
             </lightning-record-edit-form>
-        </div> -->
-    <!-- </template> -->
+        </div> 
+</template> -->
