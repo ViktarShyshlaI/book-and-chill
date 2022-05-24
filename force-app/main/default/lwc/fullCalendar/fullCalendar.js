@@ -83,8 +83,6 @@ export default class FullCalendarComponent extends NavigationMixin(LightningElem
         loadScript(this, fullCalendar + "/packages/moment/main.js"),
         loadScript(this, fullCalendar + "/packages/moment-timezone/main.js"),
       ]).then(() => {
-        console.log("init");
-        console.log(this.recordId);
         this.init();
       });
     })
@@ -186,17 +184,12 @@ export default class FullCalendarComponent extends NavigationMixin(LightningElem
   }
 
   handleScroll(event) {
-    console.log("handleScroll");
     event.stopImmediatePropogation();
   }
 
 
   handleEventClick(event) {
     let info = event.detail;
-    console.log('Event: ' + info.event.title);
-    console.log('Coordinates: ' + info.jsEvent.pageX + ',' + info.jsEvent.pageY);
-    console.log('View: ' + info.view.type);
-    console.log(info);
     this[NavigationMixin.Navigate]({
       type: 'standard__recordPage',
       attributes: {
@@ -239,7 +232,7 @@ export default class FullCalendarComponent extends NavigationMixin(LightningElem
             });
           }
         }
-        console.log("num events = ",e.length);
+        // console.log("num events = ",e.length);
         successCallback(e);
       }
     })

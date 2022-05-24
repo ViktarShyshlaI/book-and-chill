@@ -9,13 +9,26 @@ public with sharing class EventController {
     
     @AuraEnabled
     public static List<Event__c> getListEvents() {
-        return [SELECT Id, Name, Premises__c, 
-                                 Premises__r.Name, 
-                                 Premises__r.City__c, 
-                                 Premises__r.Country__c, 
-                                 Premises__r.Street__c, 
-                        Type__c, StartDateTime__c, EndDateTime__c 
-                FROM Event__c ORDER BY StartDateTime__c];
+
+        Datetime today = Datetime.now();
+        Datetime nextThirtyDays = today.addDays(30);
+        String soqlQuery = '';
+        soqlQuery += 'SELECT Id, Name, Premises__c,'
+                                + ' Premises__r.Name,'
+                                + ' Premises__r.City__c,' 
+                                + ' Premises__r.Country__c,' 
+                                + ' Premises__r.Street__c,'
+                                + ' Type__c, StartDateTime__c, EndDateTime__c'
+                                + ' FROM Event__c' 
+                                + ' WHERE StartDateTime__c > YESTERDAY'
+                                + ' AND StartDateTime__c <= NEXT_N_DAYS:30'
+                                + ' AND ConfirmEvent__c = true'
+                                + ' ORDER BY StartDateTime__c';
+        System.debug(soqlQuery);
+
+        List<Event__c> q = (List<Event__c>)Database.query(soqlQuery);
+
+        return q;
     }
 
     @AuraEnabled

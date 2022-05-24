@@ -10,6 +10,7 @@ import TYPE_FIELD from '@salesforce/schema/Event__c.Type__c';
 import PREMISELOOKUP_FIELD from '@salesforce/schema/Event__c.Premises__c';
 import STARTTIME_FIELD from '@salesforce/schema/Event__c.StartDateTime__c';
 import ENDTIME_FIELD from '@salesforce/schema/Event__c.EndDateTime__c';
+import CONFIRMEVENT_FIELD from '@salesforce/schema/Event__c.ConfirmEvent__c';
 
 const columns = [
     {   
@@ -38,6 +39,7 @@ const columns = [
             month: "long",
             day: "2-digit",
             hour: "2-digit",
+            minute: "2-digit",
         }
     },
     { 
@@ -49,6 +51,7 @@ const columns = [
             month: "long",
             day: "2-digit",
             hour: "2-digit",
+            minute: "2-digit",
         }
     },
 ];
@@ -65,7 +68,7 @@ export default class ListEvents extends LightningElement {
     endDate = null;
     
     objectApiName = EVENT_OBJECT;
-    fields = [NAME_FIELD, TYPE_FIELD, PREMISELOOKUP_FIELD, STARTTIME_FIELD, ENDTIME_FIELD];
+    fields = [NAME_FIELD, TYPE_FIELD, PREMISELOOKUP_FIELD, STARTTIME_FIELD, ENDTIME_FIELD, CONFIRMEVENT_FIELD];
 
     connectedCallback() {
         this.getEvents();
