@@ -20,7 +20,7 @@ public with sharing class EventController {
                                 + ' Premises__r.Street__c,'
                                 + ' Type__c, StartDateTime__c, EndDateTime__c'
                                 + ' FROM Event__c' 
-                                + ' WHERE StartDateTime__c > YESTERDAY'
+                                + ' WHERE EndDateTime__c > YESTERDAY'
                                 + ' AND StartDateTime__c <= NEXT_N_DAYS:30'
                                 + ' AND ConfirmEvent__c = true'
                                 + ' ORDER BY StartDateTime__c';
