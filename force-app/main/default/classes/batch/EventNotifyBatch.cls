@@ -8,6 +8,7 @@ public with sharing class EventNotifyBatch implements Database.Batchable<sObject
         return DataBase.getQueryLocator([SELECT Name, ConfirmEvent__c 
                                          FROM Event__c 
                                             WHERE ConfirmEvent__c = false 
+                                            AND EndDateTime__c > TODAY
                                             AND StartDateTime__c <= NEXT_N_DAYS:35]);
     }
 
@@ -38,6 +39,7 @@ public with sharing class EventNotifyBatch implements Database.Batchable<sObject
         return usersIds;
     }
 }
+
 // EventNotifyBatch adb = new EventNotifyBatch();
 // Database.executeBatch(adb);
 
@@ -48,3 +50,7 @@ public with sharing class EventNotifyBatch implements Database.Batchable<sObject
 // List<Event__c> listName = [SELECT Id FROM Event__c WHERE EndDateTime__c < TODAY];
 // System.debug(listName.size());
 // delete listName;
+
+// EventNotifyScheduler ev = new EventNotifyScheduler();
+// String sch = '0 20 13 1/1 * ? *';
+// String jobID = System.schedule('Remind Opp Owners', sch, ev);
