@@ -65,7 +65,8 @@ export default class ListEvents extends LightningElement {
     columns = columns;
     insertedRecord;
     error;
-    
+    events;
+
     startDate = null;
     endDate = null;
     
@@ -97,37 +98,66 @@ export default class ListEvents extends LightningElement {
             
     getEvents() {
         getListEvents()
-        .then(result => {
-            let tempEvntList = []; 
-            result.forEach((record) => {
-                let tempEvnRec = Object.assign({}, record);  
-                tempEvnRec.EventName = '/' + tempEvnRec.Id;
-                if (!tempEvnRec.Premises__c || tempEvnRec.Premises__c.length === 0 ) {
-                    tempEvnRec.PremisesName = "";    
+        .then(data => {
+            let rows = JSON.parse( JSON.stringify( data ) );
+            const options = {
+                year: 'numeric', month: 'numeric', day: 'numeric',
+                hour: 'numeric', minute: 'numeric', second: 'numeric',
+                hour12: false
+            };
+            for ( let i = 0; i < rows.length; i++ ) {  
+                let dataParse = rows[ i ];
+                if ( dataParse.StartDateTime__c ) {
+                    let dt = new Date( dataParse.StartDateTime__c );
+                    dataParse.StartDateTime__c = new Intl.DateTimeFormat( 'en-US', options ).format( dt );
                 }
-                else {
-                    tempEvnRec.PremisesName = tempEvnRec.Premises__r.Name;
+                if ( dataParse.EndDateTime__c ) {
+                    let dt = new Date( dataParse.EndDateTime__c );
+                    dataParse.EndDateTime__c = new Intl.DateTimeFormat( 'en-US', options ).format( dt );
                 }
-                // if (this.isUsersAccess) {
-                //     tempEvnRec.FiledType = "url";
-                //     tempEvnRec.EventName = '/' + tempEvnRec.Id;
-                //     console.log(tempEvnRec);
-                // }
-                // else {
-                //     tempEvnRec.EventName = tempEvnRec.Name;
-                //     tempEvnRec.FiledType = "String";
-                // }
-
-                tempEvntList.push(tempEvnRec);
-            });
-            this.records = tempEvntList;
-            if (this.records.length !== 0) {
-                this.isData = true;
+                this.events = rows;
+                this.error = undefined;
             }
-        })
+
+            console.log("events: ", this.events);
+        })  
         .catch(error => {
             console.error("error calling apex controller:",error);
         });
+
+
+        // getListEvents()
+        // .then(result => {
+        //     let tempEvntList = []; 
+        //     result.forEach((record) => {
+        //         let tempEvnRec = Object.assign({}, record);  
+        //         tempEvnRec.EventName = '/' + tempEvnRec.Id;
+        //         if (!tempEvnRec.Premises__c || tempEvnRec.Premises__c.length === 0 ) {
+        //             tempEvnRec.PremisesName = "";    
+        //         }
+        //         else {
+        //             tempEvnRec.PremisesName = tempEvnRec.Premises__r.Name;
+        //         }
+        //         // if (this.isUsersAccess) {
+        //         //     tempEvnRec.FiledType = "url";
+        //         //     tempEvnRec.EventName = '/' + tempEvnRec.Id;
+        //         //     console.log(tempEvnRec);
+        //         // }
+        //         // else {
+        //         //     tempEvnRec.EventName = tempEvnRec.Name;
+        //         //     tempEvnRec.FiledType = "String";
+        //         // }
+
+        //         tempEvntList.push(tempEvnRec);
+        //     });
+        //     this.records = tempEvntList;
+        //     if (this.records.length !== 0) {
+        //         this.isData = true;
+        //     }
+        // })
+        // .catch(error => {
+        //     console.error("error calling apex controller:",error);
+        // });
     }
 
 
@@ -174,4 +204,5 @@ export default class ListEvents extends LightningElement {
         // this.endDate = null;
         // this.startDate = null;
     }
+    
 }

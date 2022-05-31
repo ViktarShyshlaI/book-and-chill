@@ -11,7 +11,7 @@
                 ></lightning-icon>
             </button>
         </template>
-        <div if:false={isData} class="slds-is-relative">
+        <div if:false={events} class="slds-is-relative">
             <lightning-spinner alternative-text="Loading...">
             </lightning-spinner>
         </div>
@@ -23,6 +23,48 @@
                 hide-checkbox-column
             ></lightning-datatable>
         </template>
+
+        <template if:true={events}>
+            <table class="slds-table slds-table_cell-buffer slds-table_bordered" aria-label="Example table of Opportunities with striped rows">
+            <thead>
+                <tr class="slds-line-height_reset">
+                    <th class="" scope="col">
+                        <div class="slds-truncate" title="Name">Name</div>
+                    </th>
+                    <th class="" scope="col">
+                        <div class="slds-truncate" title="Premise">Premise</div>
+                    </th>
+                    <th class="" scope="col">
+                        <div class="slds-truncate" title="Start">Start</div>
+                    </th>
+                    <th class="" scope="col">
+                        <div class="slds-truncate" title="End">End</div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <template iterator:it={events}>
+                    <tr class="slds-hint-parent" key = {it.value.Id}>
+                        <td data-label="Name">
+                            <div class="slds-cell-wrap">
+                                <a href="#" tabindex="-1">{it.value.Name}</a>
+                            </div>
+                        </td>
+                        <td data-label="Premise">
+                            {it.value.Premises__r.Name}
+                        </td>
+                        <td data-label="Start">
+                            <div class="slds-cell-wrap">{it.value.StartDateTime__c}</div>
+                        </td>
+                        <td data-label="End">
+                            <div class="slds-cell-wrap">{it.value.EndDateTime__c}</div>
+                        </td>
+                    </tr>
+                </template>
+            </tbody>
+          </table>
+        </template>
+
         <template if:true={isUsersAccess}>
             <div class="slds-m-around_medium">
                 <lightning-button 

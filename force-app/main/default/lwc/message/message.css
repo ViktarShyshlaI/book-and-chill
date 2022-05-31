@@ -1,0 +1,10 @@
+.typeMessage {
+    background-color: rgb(255 255 255);
+    border: 1px solid hwb(0deg 81% 19%);
+    border-radius: 4px;
+    padding: 4px 8px;
+}
+
+.lightning-card {
+    background-color: red;
+}
