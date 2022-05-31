@@ -1,6 +1,7 @@
 import { LightningElement, api, wire, track } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import getListEvents from '@salesforce/apex/EventController.getListEvents';
+import getUserInfo from '@salesforce/apex/UserController.getUserInfo';
 import getInsertedRecord from '@salesforce/apex/EventController.getInsertedRecord';
 import { refreshApex } from '@salesforce/apex';
 
@@ -16,7 +17,7 @@ const columns = [
     {   
         label: 'Name',
         fieldName: 'EventName',
-        type: 'url',
+        type: 'url', // have to change "FiledType" - couse gouse user have a non works link
         typeAttributes: {
             label: { fieldName: 'Name' }, 
             target: '_blank'
@@ -57,6 +58,7 @@ const columns = [
 ];
 
 export default class ListEvents extends LightningElement {
+    @track isUsersAccess = false;
     isModalOpen = false;
     isData = false;
     @track records;
@@ -69,16 +71,33 @@ export default class ListEvents extends LightningElement {
     
     objectApiName = EVENT_OBJECT;
     fields = [NAME_FIELD, TYPE_FIELD, PREMISELOOKUP_FIELD, STARTTIME_FIELD, ENDTIME_FIELD, CONFIRMEVENT_FIELD];
-
+    
     connectedCallback() {
-        this.getEvents();
+        this.checkUser();
+        // this.getEvents();         // move to checkUser() for async correct procces
     }
     
+    async checkUser() {
+        try {
+            const result = await getUserInfo();
+            let profileName = result.Profile.Name; 
+            if(profileName == "System Administrator"  || 
+               profileName == "Facilities Accountant" ||
+               profileName == "Event Organizer") {    
+                this.isUsersAccess = true;
+            }
+        }
+        catch (error) {
+            console.log(error);
+        }
+        finally {
+            this.getEvents();
+        }
+    }
             
     getEvents() {
         getListEvents()
         .then(result => {
-            console.log("result", result);
             let tempEvntList = []; 
             result.forEach((record) => {
                 let tempEvnRec = Object.assign({}, record);  
@@ -89,10 +108,19 @@ export default class ListEvents extends LightningElement {
                 else {
                     tempEvnRec.PremisesName = tempEvnRec.Premises__r.Name;
                 }
+                // if (this.isUsersAccess) {
+                //     tempEvnRec.FiledType = "url";
+                //     tempEvnRec.EventName = '/' + tempEvnRec.Id;
+                //     console.log(tempEvnRec);
+                // }
+                // else {
+                //     tempEvnRec.EventName = tempEvnRec.Name;
+                //     tempEvnRec.FiledType = "String";
+                // }
+
                 tempEvntList.push(tempEvnRec);
             });
             this.records = tempEvntList;
-            console.log("this.records", this.records);
             if (this.records.length !== 0) {
                 this.isData = true;
             }

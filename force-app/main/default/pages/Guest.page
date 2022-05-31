@@ -3,7 +3,7 @@
     <div id="lightningvf" />
     <script>
         $Lightning.use("c:GuestApp", function () {
-            $Lightning.createComponent("c:listEventsGuestUsers", {}, "lightningvf", function (cmp) { });
+            $Lightning.createComponent("c:listEvents", {}, "lightningvf", function (cmp) { });
         });
     </script>
 </apex:page>
