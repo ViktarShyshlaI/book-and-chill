@@ -2,6 +2,7 @@ import { LightningElement, api, wire, track } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import getListEvents from '@salesforce/apex/EventController.getListEvents';
 import getUserInfo from '@salesforce/apex/UserController.getUserInfo';
+import getListMessages from '@salesforce/apex/MessageInfoController.getListMessages';
 import getInsertedRecord from '@salesforce/apex/EventController.getInsertedRecord';
 import { refreshApex } from '@salesforce/apex';
 
@@ -60,12 +61,17 @@ const columns = [
 export default class ListEvents extends LightningElement {
     @track isUsersAccess = false;
     isModalOpen = false;
-    isData = false;
-    @track records;
-    columns = columns;
+    // isData = false;
+    // @track records;
+    // columns = columns;
     insertedRecord;
     error;
     events;
+    messages;
+    numMessage = 0;
+
+    data = [];
+    isData = false;
 
     startDate = null;
     endDate = null;
@@ -78,11 +84,23 @@ export default class ListEvents extends LightningElement {
         // this.getEvents();         // move to checkUser() for async correct procces
     }
     
+    get typeMessage() {
+        console.log(this.messages[this.numMessage].Type__c);
+        return this.messages[this.numMessage].Type__c;
+    }
+
+    get textMessage() {
+        let ms = this.messages[this.numMessage].Message__c;
+        this.numMessage ++;
+        return ms;
+    }
+
+    
     async checkUser() {
         try {
             const result = await getUserInfo();
             let profileName = result.Profile.Name; 
-            if(profileName == "System Administrator"  || 
+            if (profileName == "System Administrator"  || 
                profileName == "Facilities Accountant" ||
                profileName == "Event Organizer") {    
                 this.isUsersAccess = true;
@@ -92,21 +110,89 @@ export default class ListEvents extends LightningElement {
             console.log(error);
         }
         finally {
-            this.getEvents();
+            this.makeData();
         }
     }
-            
-    getEvents() {
-        getListEvents()
-        .then(data => {
-            let rows = JSON.parse( JSON.stringify( data ) );
+    
+    async makeData() {        
+        const events = await getListEvents();
+        this.getEvents(events);
+
+        const messages = await getListMessages();
+        this.getMessages(messages);
+
+        this.createRecord(this.events, true, false);
+        this.createRecord(this.messages, false, true);
+
+        this.sortData();
+        this.isData = true;
+    }
+
+    
+    sortData() {
+        // console.log("BEFORE, this.data: ", this.data);   
+        // this.data.sort(function(a, b){return a.StartDateTime__c - b.StartDateTime__c});
+        // console.log("AFTER, this.data: ", this.data);   
+        // this.isData.sort((d1, d2) => new Date(d1.StartDateTime__c).getTime() - new Date(d2.StartDateTime__c).getTime());
+        // console.log("typeof !!!!  this.data: ", typeof this.data);   
+    }
+    
+
+    createRecord(data, isEvent, isMessage) {
+        if (!data) {
+           return;
+        }
+        for (let i = 0; i < data.length; i++) {
+            let Id = data[i].Id ? data[i].Id : " ";
+            let Name = data[i].Name ? data[i].Name : " ";
+            let PremisesName = data[i].Premises__r ? data[i].Premises__r.Name : " ";
+            let StartDateTime__c = data[i].StartDateTime__c ? data[i].StartDateTime__c : " ";
+            let EndDateTime__c = data[i].EndDateTime__c ? data[i].EndDateTime__c : " ";
+
+            const item = {
+                IsEvent : isEvent,
+                IsMessage : isMessage,
+                Id : Id,
+                Name : Name,
+                PremisesName : PremisesName,
+                StartDateTime__c : StartDateTime__c,
+                EndDateTime__c : EndDateTime__c
+            }
+            this.data.push(item);
+        }
+    }
+
+    getMessages(data) {
+        try {
             const options = {
                 year: 'numeric', month: 'numeric', day: 'numeric',
                 hour: 'numeric', minute: 'numeric', second: 'numeric',
                 hour12: false
             };
-            for ( let i = 0; i < rows.length; i++ ) {  
-                let dataParse = rows[ i ];
+            for ( let i = 0; i < data.length; i++ ) {  
+                let dataParse = data[ i ];
+                if ( dataParse.StartDateTime__c ) {
+                    let dt = new Date( dataParse.StartDateTime__c );
+                    dataParse.StartDateTime__c = new Intl.DateTimeFormat( 'en-US', options ).format( dt );
+                }
+            }
+            this.messages = data;
+            this.error = undefined;
+        } 
+        catch (error) { 
+            console.error("error calling apex controller:",error);
+        }
+    }
+
+    getEvents(data) {
+        try {
+            const options = {
+                year: 'numeric', month: 'numeric', day: 'numeric',
+                hour: 'numeric', minute: 'numeric', second: 'numeric',
+                hour12: false
+            };
+            for ( let i = 0; i < data.length; i++ ) {  
+                let dataParse = data[ i ];
                 if ( dataParse.StartDateTime__c ) {
                     let dt = new Date( dataParse.StartDateTime__c );
                     dataParse.StartDateTime__c = new Intl.DateTimeFormat( 'en-US', options ).format( dt );
@@ -115,15 +201,13 @@ export default class ListEvents extends LightningElement {
                     let dt = new Date( dataParse.EndDateTime__c );
                     dataParse.EndDateTime__c = new Intl.DateTimeFormat( 'en-US', options ).format( dt );
                 }
-                this.events = rows;
-                this.error = undefined;
             }
-
-            console.log("events: ", this.events);
-        })  
-        .catch(error => {
+            this.events = data;
+            this.error = undefined;
+        }  
+        catch (error) {
             console.error("error calling apex controller:",error);
-        });
+        };
 
 
         // getListEvents()
@@ -160,7 +244,6 @@ export default class ListEvents extends LightningElement {
         // });
     }
 
-
     handleStartDateFill(event) {
         if (this.endDate == null || this.endDate < event.target.value) {
             this.endDate = event.target.value;
@@ -173,8 +256,6 @@ export default class ListEvents extends LightningElement {
             this.startDate = this.endDate;
         }
     }
-    
-    
     
     showToast(theTitle, theMessage, theVariant) {
         const event = new ShowToastEvent({
@@ -204,5 +285,4 @@ export default class ListEvents extends LightningElement {
         // this.endDate = null;
         // this.startDate = null;
     }
-    
 }
