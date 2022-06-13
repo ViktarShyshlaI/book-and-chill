@@ -84,18 +84,6 @@ export default class ListEvents extends LightningElement {
         // this.getEvents();         // move to checkUser() for async correct procces
     }
     
-    get typeMessage() {
-        console.log(this.messages[this.numMessage].Type__c);
-        return this.messages[this.numMessage].Type__c;
-    }
-
-    get textMessage() {
-        let ms = this.messages[this.numMessage].Message__c;
-        this.numMessage ++;
-        return ms;
-    }
-
-    
     async checkUser() {
         try {
             const result = await getUserInfo();
@@ -148,18 +136,26 @@ export default class ListEvents extends LightningElement {
             let PremisesName = data[i].Premises__r ? data[i].Premises__r.Name : " ";
             let StartDateTime__c = data[i].StartDateTime__c ? data[i].StartDateTime__c : " ";
             let EndDateTime__c = data[i].EndDateTime__c ? data[i].EndDateTime__c : " ";
+            let Type__c = data[i].Type__c ? data[i].Type__c : " ";
+            let Message__c = data[i].Message__c ? data[i].Message__c : " ";
 
             const item = {
-                IsEvent : isEvent,
-                IsMessage : isMessage,
-                Id : Id,
-                Name : Name,
-                PremisesName : PremisesName,
-                StartDateTime__c : StartDateTime__c,
-                EndDateTime__c : EndDateTime__c
+                isEvent : isEvent,
+                isMessage : isMessage,
+                id : Id,
+                name : Name,
+                premisesName : PremisesName,
+                startDateTime : StartDateTime__c,
+                endDateTime : EndDateTime__c,
+                type : Type__c,
+                message : Message__c
             }
             this.data.push(item);
         }
+    }
+    
+    handleOpenEvent(event) {
+        console.log(event.data);
     }
 
     getMessages(data) {
@@ -210,6 +206,7 @@ export default class ListEvents extends LightningElement {
         };
 
 
+
         // getListEvents()
         // .then(result => {
         //     let tempEvntList = []; 
@@ -244,18 +241,7 @@ export default class ListEvents extends LightningElement {
         // });
     }
 
-    handleStartDateFill(event) {
-        if (this.endDate == null || this.endDate < event.target.value) {
-            this.endDate = event.target.value;
-        }
-    }
     
-    handleEndDateFill(event) {
-        this.endDate = event.target.value;
-        if (this.startDate == null || this.endDate <= this.startDate) {
-            this.startDate = this.endDate;
-        }
-    }
     
     showToast(theTitle, theMessage, theVariant) {
         const event = new ShowToastEvent({
@@ -268,21 +254,25 @@ export default class ListEvents extends LightningElement {
     
     handleSuccess(event) {
         this.showToast("Event was created", 'Record ID: ' + event.detail.Name, "success");
-
-        // const evt = new ShowToastEvent({
-            //     title: 'Event was created',
-            //     message: 'Record ID: ' + event.detail.Name,
-            //     variant: 'success',
-            // });
-            // this.dispatchEvent(evt);
-            // console.log('event detail: ', event.detail);
-            // console.log('NAME_FIELD: ', NAME_FIELD);
-            this.handleModalChange();
+        this.handleModalChange();
     }
-        
+    
     handleModalChange() {
         this.isModalOpen = !this.isModalOpen;
         // this.endDate = null;
         // this.startDate = null;
     }
+    
+    // handleStartDateFill(event) {
+    //     if (this.endDate == null || this.endDate < event.target.value) {
+    //         this.endDate = event.target.value;
+    //     }
+    // }
+    
+    // handleEndDateFill(event) {
+    //     this.endDate = event.target.value;
+    //     if (this.startDate == null || this.endDate <= this.startDate) {
+    //         this.startDate = this.endDate;
+    //     }
+    // }
 }

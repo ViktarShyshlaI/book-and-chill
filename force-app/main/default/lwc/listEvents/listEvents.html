@@ -46,29 +46,29 @@
                 <template iterator:it={data}>
 
                     
-                    <template if:true={it.value.IsMessage}>
-                        <tr class="slds-hint-parent" key = {it.value.Id}>
+                    <template if:true={it.value.isMessage}>
+                        <tr class="slds-hint-parent" key = {it.value.id}>
                             <td colspan="5">
-                                <c-message type-message={typeMessage} text-message={textMessage}></c-message>
+                                <c-message message={it.value}></c-message>
                             </td>
                         </tr>
                     </template>
                     
-                    <template if:true={it.value.IsEvent}>
-                        <tr class="slds-hint-parent" key = {it.value.Id}>
+                    <template if:true={it.value.isEvent}>
+                        <tr class="slds-hint-parent" key = {it.value.id}>
                             <td data-label="Name">
                                 <div class="slds-cell-wrap">
-                                    <a href="#" tabindex="-1">{it.value.Name}</a>
+                                    <a href="#" tabindex="-1" onclick={handleOpenEvent}>{it.value.name}</a>
                                 </div>
                             </td>
                             <td data-label="Premise">
-                                <div class="slds-cell-wrap">{it.value.PremisesName}</div>
+                                <div class="slds-cell-wrap">{it.value.premisesName}</div>
                             </td>
                             <td data-label="Start">
-                                <div class="slds-cell-wrap">{it.value.StartDateTime__c}</div>
+                                <div class="slds-cell-wrap">{it.value.startDateTime}</div>
                             </td>
                             <td data-label="End">
-                                <div class="slds-cell-wrap">{it.value.EndDateTime__c}</div>
+                                <div class="slds-cell-wrap">{it.value.endDateTime}</div>
                             </td>
                         </tr>    
                     </template>
@@ -80,6 +80,7 @@
 
         <template if:true={isUsersAccess}>
             <div class="slds-m-around_medium">
+
                 <lightning-button 
                     label="Create new event" 
                     title="Create new event" 
@@ -87,18 +88,17 @@
                     icon-position="right"
                     disabled={isButtonDisabled}
                     onclick={handleModalChange}
-                ></lightning-button>
-            </div>
-
-            <div class="slds-m-around_medium">
-                <lightning-button 
-                    label="New message" 
-                    title="New message" 
-                    icon-name="standard:messaging_session" 
-                    icon-position="right"
-                    disabled={isButtonDisabled}
-                    onclick={handleNewMessage}
-                ></lightning-button>
+                    ></lightning-button>
+                    
+                    <lightning-button 
+                        class="slds-p-left_small"
+                        label="New message" 
+                        title="New message" 
+                        icon-name="standard:messaging_session" 
+                        icon-position="right"
+                        disabled={isButtonDisabled}
+                        onclick={handleNewMessage}
+                    ></lightning-button>
             </div>
         </template>
       
