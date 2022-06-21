@@ -75,8 +75,11 @@ export default class ListEvents extends LightningElement {
 
     startDate = null;
     endDate = null;
+
+    isCreaterEvent = false;
+    isCreaterMessage = false;
     
-    objectApiName = EVENT_OBJECT;
+    objectApiNameEvent = EVENT_OBJECT;
     fields = [NAME_FIELD, TYPE_FIELD, PREMISELOOKUP_FIELD, STARTTIME_FIELD, ENDTIME_FIELD, CONFIRMEVENT_FIELD];
     
     connectedCallback() {
@@ -147,7 +150,7 @@ export default class ListEvents extends LightningElement {
                 premisesName : PremisesName,
                 startDateTime : StartDateTime__c,
                 endDateTime : EndDateTime__c,
-                type : Type__c,
+                type : Type__c.split(' ')[0],
                 message : Message__c
             }
             this.data.push(item);
@@ -262,7 +265,27 @@ export default class ListEvents extends LightningElement {
         // this.endDate = null;
         // this.startDate = null;
     }
+
+    handleCreaterEvent() {
+        this.handleModalChange();
+        this.isCreaterEvent = true;
+        this.isCreaterMessage = false;
+    }
     
+    handleCreaterMessage() {
+        this.handleModalChange();
+        this.isCreaterEvent = false;
+        this.isCreaterMessage = true;
+    }
+    
+    handleEventFire() {
+        this.isCreaterEvent = false;
+        this.isCreaterMessage = false;
+    }
+
+
+
+
     // handleStartDateFill(event) {
     //     if (this.endDate == null || this.endDate < event.target.value) {
     //         this.endDate = event.target.value;

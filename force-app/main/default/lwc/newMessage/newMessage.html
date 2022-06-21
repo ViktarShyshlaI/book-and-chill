@@ -1,0 +1,49 @@
+<template>
+    <lightning-card>
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse">
+                    <lightning-icon icon-name="utility:close"
+                        alternative-text="close"
+                        variant="inverse"
+                        size="small" 
+                        onclick={handleError}>
+                    </lightning-icon>
+                    <span class="slds-assistive-text">Cancel and close</span>
+                </button>                  
+                <lightning-card>
+                    <div class="slds-modal__header">
+                        <h1 id="modal-heading-02" class="slds-modal__title slds-hyphenate">New Message</h1>
+                    </div>
+                    <div class="slds-box">
+                        <lightning-record-edit-form object-api-name="Message__c"
+                            onerror={handleError} 
+                            onsuccess={handleSuccess}>
+                            <lightning-input-field field-name="Name"> </lightning-input-field>
+                            <lightning-input-field field-name="Type__c"> </lightning-input-field>
+                            <lightning-input-field field-name="Message__c"> </lightning-input-field>
+                            <lightning-input-field field-name="StartDateTime__c" value={startDate} onchange={handleStartDateFill}> </lightning-input-field>
+                            <lightning-input-field field-name="EndDateTime__c" value={endDate} onchange={handleEndDateFill} > </lightning-input-field>
+                            <div class="slds-align_absolute-center">
+                                <lightning-button
+                                class="slds-m-top_small"
+                                label="Cancel"
+                                type="reset"
+                                variant="brand-outline"
+                                onclick={handleError}
+                                ></lightning-button>
+                                <lightning-button
+                                class="slds-m-top_small slds-m-left_small"
+                                type="submit" 
+                                variant="brand"
+                                label="Save"
+                                ></lightning-button>
+                            </div>
+                        </lightning-record-edit-form>
+                    </div>
+                </lightning-card>
+            </div>            
+        </section>
+        <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+    </lightning-card>
+</template>

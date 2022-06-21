@@ -64,4 +64,14 @@ public with sharing class EventController {
         System.debug(ev);
         return ev;
     }
+
+    @AuraEnabled
+    public static Boolean methodName(){
+        try {
+            
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+        return true;
+    }
 }
