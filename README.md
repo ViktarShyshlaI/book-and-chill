@@ -1,18 +1,13 @@
-# Salesforce DX Project: Next Steps
+# Book and chill
 
-Now that you’ve created a Salesforce DX project, what’s next? Here are some documentation resources to get you started.
+Application was start develop with idea for buisness. (well, how else) :) 
+App have any users with diff roles and access rules.
+Notify to Email if event have no confirm. (Have to correct)
 
-## How Do You Plan to Deploy Your Changes?
+Really app have a lot of bugs and mistaks, but it correct by little steps)
 
-Do you want to deploy a set of changes, or create a self-contained application? Choose a [development model](https://developer.salesforce.com/tools/vscode/en/user-guide/development-models).
+Some screenshot myy work
 
-## Configure Your Salesforce DX Project
-
-The `sfdx-project.json` file contains useful configuration information for your project. See [Salesforce DX Project Configuration](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_ws_config.htm) in the _Salesforce DX Developer Guide_ for details about this file.
-
-## Read All About It
-
-- [Salesforce Extensions Documentation](https://developer.salesforce.com/tools/vscode/)
-- [Salesforce CLI Setup Guide](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_intro.htm)
-- [Salesforce DX Developer Guide](https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_intro.htm)
-- [Salesforce CLI Command Reference](https://developer.salesforce.com/docs/atlas.en-us.sfdx_cli_reference.meta/sfdx_cli_reference/cli_reference.htm)
+![screencapture-intershipitechart-dev-ed-lightning-force-lightning-n-All-Hands-2022-12-22-15_20_53](https://user-images.githubusercontent.com/97032136/209134956-73ccb68d-d65b-4e67-b220-0bc3f30db5b2.png)
+<img width="682" alt="Screen Shot 2022-12-22 at 15 26 51" src="https://user-images.githubusercontent.com/97032136/209134977-b64484d0-2b00-41b2-a7e2-3902dd99bcf7.png">
+<img width="681" alt="Screen Shot 2022-12-22 at 15 27 02" src="https://user-images.githubusercontent.com/97032136/209134984-cae3ce11-eeb3-4fee-99af-458e01bb313b.png">
